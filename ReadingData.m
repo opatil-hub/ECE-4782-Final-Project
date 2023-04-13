@@ -38,15 +38,31 @@ zhilbert = hilbert(g);
 
 
 %instantaneous amplitude and phase
-anglex = angle(xhilbert); 
-ampx = abs(xhilbert); 
-angley = angle(yhilbert); 
-ampy = abs(yhilbert);
-anglez = angle(zhilbert); 
-ampz = abs(zhilbert);
+thetax = angle(xhilbert); 
+r_x = abs(xhilbert);
 
-adaptiveTable = array2table([ppg, e,f,g, anglex, ampx, angley, ampy, anglez, ampz], 'VariableNames',columnNamesExcel);
-writetable(adaptiveTable,excelFilename,'Sheet', tabTitle, 'WriteVariableNames', true);
+thetay = angle(yhilbert); 
+r_y = abs(yhilbert);
+
+thetaz = angle(zhilbert); 
+r_z = abs(zhilbert);
+
+numFilter = 3; % Num of Filters;
+
+% Reconstruction of PPG (Ensures utilization of element wise arithmetic):
+
+phi = cos(thetax./3).*cos(thetay./3).*cos(thetaz./3);
+r = ((r_x.*r_y.*r_z).^numFilter).*phi;
+
+figure
+plot(r)
+title("Reconstructed Signal");
+
+%Insert Peak & Trace Code for AM, FM, & IM:
+
+
+%adaptiveTable = array2table([ppg, e,f,g, thetax, r_x, thetay, r_y, thetaz, r_z], 'VariableNames',columnNamesExcel);
+%writetable(adaptiveTable,excelFilename,'Sheet', tabTitle, 'WriteVariableNames', true);
 
 
 
